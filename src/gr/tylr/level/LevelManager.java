@@ -1,6 +1,10 @@
 package gr.tylr.level;
 
+import gr.tylr.entity.EntityManager;
+import gr.tylr.entity.StaticEntity;
+import gr.tylr.state.TyLRGame;
 import java.util.ArrayList;
+import org.jbox2d.common.Vec2;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.tiled.TiledMap;
 import org.newdawn.slick.util.Log;
@@ -10,9 +14,10 @@ import org.newdawn.slick.util.Log;
  * @author manji
  */
 public class LevelManager {
-
+    
     private ArrayList<Level> levels;
     private static Level currentLevel;
+    
 
     public LevelManager() throws SlickException {
         
@@ -35,4 +40,36 @@ public class LevelManager {
             Log.warn("Level " + index + " does not exist");
         }
     }
+    
+    public void loadCurrentLevel() {
+        TiledMap tiledMap = currentLevel.getTileMap();
+        float size = tiledMap.getTileHeight();
+        for (int x = 0; x < tiledMap.getWidth(); x++) {
+            for (int y = 0; y < tiledMap.getHeight(); y++) {                
+                if (tiledMap.getTileId(x, y, 0) == 1) {               
+                    EntityManager.add(new 
+                            StaticEntity(new Vec2(x*size,
+                                             (tiledMap.getHeight()-y-1)*size),
+                                         new Vec2(size, size),
+                                         ("MapTile_" + x + "." + y)),
+                                         false,
+                                         true);                    
+                    currentLevel.setMapOccupation(x, tiledMap.getHeight()-y-1);
+                }
+            }
+        }
+    }
+    
+    public static float getTileHeight() {
+        return currentLevel.getTileMap().getTileHeight();
+    }
+    
+    public static boolean isOccupied(float x, float y) {
+        return currentLevel.isOccupied(x, y);
+    }
+    
+    public static int getLevelHeight() {
+        return currentLevel.getTileMap().getHeight();
+    }
+
 }
