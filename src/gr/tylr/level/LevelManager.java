@@ -2,7 +2,6 @@ package gr.tylr.level;
 
 import gr.tylr.entity.EntityManager;
 import gr.tylr.entity.StaticEntity;
-import gr.tylr.state.TyLRGame;
 import java.util.ArrayList;
 import org.jbox2d.common.Vec2;
 import org.newdawn.slick.SlickException;
