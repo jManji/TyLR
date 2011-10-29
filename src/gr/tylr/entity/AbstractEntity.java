@@ -1,13 +1,12 @@
 package gr.tylr.entity;
 
 import gr.tylr.level.LevelManager;
+import gr.tylr.state.TyLRGame;
+import gr.tylr.util.Util;
 import org.jbox2d.common.Vec2;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Image;
 import org.newdawn.slick.geom.Polygon;
-import gr.tylr.util.Util;
-import gr.tylr.state.GameplayState;
-import gr.tylr.state.TyLRGame;
 
 /**
  *
@@ -64,13 +63,9 @@ public abstract class AbstractEntity implements Entity {
     // checks is needed
     public void render(Graphics graphics) {        
         
-        if (sprite != null) {            
-            sprite.draw(polygon.getX(), polygon.getY());
-        } else {
-            
-            graphics.draw(polygon);
-        }
-        
+//        if (sprite != null) {
+		sprite.draw(polygon.getX(), polygon.getY());
+//		graphics.draw(polygon);        
     }
     
     public abstract void update(int delta);

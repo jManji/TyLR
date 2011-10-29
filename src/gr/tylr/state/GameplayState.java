@@ -1,23 +1,22 @@
 package gr.tylr.state;
 
-import org.newdawn.slick.GameContainer;
-import org.newdawn.slick.Graphics;
-import org.newdawn.slick.SlickException;
-import org.newdawn.slick.state.BasicGameState;
-import org.newdawn.slick.state.StateBasedGame;
-import org.newdawn.slick.geom.Polygon;
-import org.newdawn.slick.tiled.TiledMap;
+import gr.tylr.entity.AbstractPhysicsEntity;
+import gr.tylr.entity.Entity;
+import gr.tylr.entity.EntityManager;
+import gr.tylr.entity.Hero;
+import gr.tylr.level.LevelManager;
+import gr.tylr.resource.ResourceManager;
+import gr.tylr.util.Util;
 import org.jbox2d.common.Vec2;
 import org.jbox2d.dynamics.Body;
 import org.jbox2d.dynamics.World;
-import gr.tylr.resource.ResourceManager;
-import gr.tylr.entity.Entity;
-import gr.tylr.entity.Hero;
-import gr.tylr.entity.AbstractPhysicsEntity;
-import gr.tylr.entity.EntityManager;
-import gr.tylr.level.LevelManager;
-import gr.tylr.util.Util;
-import static gr.tylr.util.Consts.PTM_SCALE;
+import org.newdawn.slick.GameContainer;
+import org.newdawn.slick.Graphics;
+import org.newdawn.slick.SlickException;
+import org.newdawn.slick.geom.Polygon;
+import org.newdawn.slick.state.BasicGameState;
+import org.newdawn.slick.state.StateBasedGame;
+import org.newdawn.slick.tiled.TiledMap;
 
 /**
  *

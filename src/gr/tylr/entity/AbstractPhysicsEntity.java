@@ -19,7 +19,7 @@ import static gr.tylr.util.Consts.PTM_SCALE;
 public abstract class AbstractPhysicsEntity extends AbstractEntity {
     
     protected Body body;    
-    protected BodyDef bodyDef;
+    public BodyDef bodyDef;
     protected PolygonShape box;
     protected FixtureDef fixtureDef; 
     
@@ -68,6 +68,7 @@ public abstract class AbstractPhysicsEntity extends AbstractEntity {
         bodyDef.position.set((position.x + size.x/2)/PTM_SCALE, 
                              (position.y + size.y/2)/PTM_SCALE);
         body = GameplayState.getWorld().createBody(bodyDef);
+		body.m_userData = this;
 
         // Shape
         box = new PolygonShape();
@@ -83,6 +84,7 @@ public abstract class AbstractPhysicsEntity extends AbstractEntity {
         
         body.createFixture(fixtureDef);
 
+		
         /************
          * Graphics *
          ************/                

@@ -1,7 +1,7 @@
 package gr.tylr.entity;
 
-import org.jbox2d.common.Vec2;
 import gr.tylr.resource.Sprite;
+import org.jbox2d.common.Vec2;
 
 /**
  *

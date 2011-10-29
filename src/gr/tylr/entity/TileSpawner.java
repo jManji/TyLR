@@ -1,16 +1,16 @@
 package gr.tylr.entity;
 
-import java.util.LinkedList;
-import java.util.List;
-import org.jbox2d.common.Vec2;
-import org.newdawn.slick.Image;
 import gr.tylr.level.LevelManager;
 import gr.tylr.resource.Sprite;
 import gr.tylr.state.GameplayState;
 import gr.tylr.util.Consts.Button;
 import gr.tylr.util.Consts.Direction;
-import gr.tylr.util.Util;
 import static gr.tylr.util.Consts.Direction.*;
+import gr.tylr.util.Util;
+import java.util.LinkedList;
+import java.util.List;
+import org.jbox2d.common.Vec2;
+import org.newdawn.slick.Image;
 
 /**
  *
@@ -36,7 +36,7 @@ public class TileSpawner extends AbstractEntity {
         for(int y=-range; y<=range; y++) {
             for(int x=-range; x<=range; x++) {
                 if(x*x + y*y <= range*range + 1 &&
-                   !(x ==0 && y==0)) {                    
+                   !(x ==0 && y==0)) {
                     if (LevelManager.isOccupied(center.x + x,
                                                 center.y + y)) {
                         addToEntityManager(center, x, y, false);
@@ -59,18 +59,21 @@ public class TileSpawner extends AbstractEntity {
                                     final float y,
                                     final boolean valid) {
         
-        Image sprite = valid ? Sprite.VALID_CANDIDATE_TILE :
-                               Sprite.INVALID_CANDIDATE_TILE;
+        Image candidateSprite = valid ? Sprite.VALID_CANDIDATE_TILE :
+                                                            Sprite.INVALID_CANDIDATE_TILE;
+
+
         
-        String name = "CANDIDATE_TILE_" + (int)(center.x + x) + "_" +
-                                          (int)(center.y + y);                                
+        String candidateName = "CANDIDATE_TILE_" +
+                                                 (int)(center.x + x) + "_" +
+                                                 (int)(center.y + y);                                
 
         EntityManager.addPost(new ImageEntity(new Vec2(
                                     Util.mapToWorld(center.x + x),
                                     Util.mapToWorld(center.y + y)),
-                                    name, sprite), false, true);
+                                    candidateName, candidateSprite), false, true);
 
-        spawnedTiles.add(name);
+        spawnedTiles.add(candidateName);
     }
 
     public void clear() {
@@ -87,23 +90,6 @@ public class TileSpawner extends AbstractEntity {
         
         spawn();
                 
-    }
-    
-    private void spawn() {
-        
-        if (GameplayState.getContainer().getInput().
-                                        isKeyPressed(Button.JUMP.getButton())) {
-            
-            EntityManager.addPost(new StaticEntity(
-                                            selectedTile.getWorldPosition(),
-                                            "SPAWNED_TILE" + Util.generateID(),
-                                            Sprite.PLAIN_TILE),
-                                            false, true);            
-
-            clear();
-            
-            hero.unSpawn();            
-        }
     }
     
     private void moveTile() {
@@ -141,8 +127,6 @@ public class TileSpawner extends AbstractEntity {
 //            System.out.println(Util.mapToWorld(newPosition.y));
 //            System.out.println(LevelManager.isOccupied((int)newPosition.x,
 //                                                       (int)newPosition.y));
-            
-
             // TODO could be done better here
             if (!newPosition.equals(center) &&
                 EntityManager.getRendableEntities().
@@ -155,6 +139,22 @@ public class TileSpawner extends AbstractEntity {
                                                Util.mapToWorld(newPosition.x), 
                                                Util.mapToWorld(newPosition.y)));
             }
+        }
+    }
+
+	private void spawn() {
+		
+        if (GameplayState.getContainer().getInput().
+                                        isKeyPressed(Button.SPAWN.getButton())) {
+			
+            EntityManager.addPost(new StaticEntity(
+                                            selectedTile.getWorldPosition(),
+                                            "SPAWNED_TILE" + Util.generateID(),
+                                            Sprite.PLAIN_TILE),
+                                            false, true);
+            clear();
+            
+            hero.unSpawn();
         }
     }
 

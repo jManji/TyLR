@@ -50,9 +50,9 @@ public class LevelManager {
                             StaticEntity(new Vec2(x*size,
                                              (tiledMap.getHeight()-y-1)*size),
                                          new Vec2(size, size),
-                                         ("MapTile_" + x + "." + y)),
+                                         ("MAP_TILE_" + x + "_" + y)),
                                          false,
-                                         true);                    
+                                         false);                    
                     currentLevel.setMapOccupation(x, tiledMap.getHeight()-y-1);
                 }
             }

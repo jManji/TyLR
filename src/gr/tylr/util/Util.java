@@ -3,12 +3,12 @@ package gr.tylr.util;
 import gr.tylr.level.LevelManager;
 import gr.tylr.state.GameplayState;
 import gr.tylr.util.Consts.Direction;
+import static gr.tylr.util.Consts.Direction.*;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import org.jbox2d.common.Vec2;
 import org.newdawn.slick.Input;
-import static gr.tylr.util.Consts.Direction.*;
 
 public abstract class Util {
 
@@ -24,20 +24,20 @@ public abstract class Util {
      * @param errorMessage The error string
      */
     public static void printError(int level, String errorMessage) {
-            Date date = new Date();
-            if (level == 1) {
-                    System.out.println("WARNING " + "[" + getTime() + "]: " + 
-                                                        errorMessage);
-            } else if (level == 2) {
-                    System.err.println("ERROR [" + getTime() + "]: " + 
-                                                            errorMessage);
-            }
+		Date date = new Date();
+		if (level == 1) {
+				System.out.println("WARNING " + "[" + getTime() + "]: " + 
+													errorMessage);
+		} else if (level == 2) {
+				System.err.println("ERROR [" + getTime() + "]: " + 
+														errorMessage);
+		}
     }
 
     private static String getTime() {
-            Calendar cal = Calendar.getInstance();
-            SimpleDateFormat sdf = new SimpleDateFormat("H:mm:ss:SSS");
-            return sdf.format(cal.getTime());
+		Calendar cal = Calendar.getInstance();
+		SimpleDateFormat sdf = new SimpleDateFormat("H:mm:ss:SSS");
+		return sdf.format(cal.getTime());
     }
 
     public static long generateID() {
