@@ -61,7 +61,8 @@ public class GameplayState extends BasicGameState {
         boolean doSleep = true;
         world = new World(gravity, doSleep);
 		
-        hero = new Hero(new Vec2(48, 48), new Vec2(46, 46), "HERO");
+        hero = new Hero(new Vec2(48, 100), new Vec2(46, 46), "HERO");
+		System.out.println(hero.getPolygonPosition());
         
         EntityManager.add(hero, true, true);
 

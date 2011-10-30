@@ -2,6 +2,7 @@ package gr.tylr.state;
 
 import org.newdawn.slick.AppGameContainer;
 import org.newdawn.slick.GameContainer;
+import org.newdawn.slick.Input;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.state.StateBasedGame;
 
@@ -18,12 +19,13 @@ public class TyLRGame extends StateBasedGame {
     }
 
     public void initStatesList(GameContainer container) throws SlickException{
-        this.container = container;
+        TyLRGame.container = container;
+		Input.disableControllers();
         addState(new GameplayState());
     }
 
     public static void main(String[] args) throws SlickException {
-        AppGameContainer app = new AppGameContainer(new TyLRGame());
+        AppGameContainer app = new AppGameContainer(new TyLRGame());		
         app.setVSync(true);
         app.setDisplayMode(800, 600, false);
         app.start();

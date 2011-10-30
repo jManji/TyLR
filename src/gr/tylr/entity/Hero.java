@@ -31,11 +31,13 @@ public class Hero extends DynamicEntity {
 	private onGroundCallback onGroundCallback;
 	private boolean isOnAir = false;
 	private boolean isJumping = false;
+	private Vec2 size;
 	
     public Hero(Vec2 position, Vec2 size, String name) {
         super(position, size, name, Sprite.MEGAMAN);
         tileSpawner = new TileSpawner(this);
         state = NORMAL;
+		this.size = size;
 		
 		aabb = new AABB();
 		onGroundCallback = new onGroundCallback();	
@@ -187,9 +189,12 @@ public class Hero extends DynamicEntity {
 		
 		return !isOnAir;
 	}
-	 
-	
+	 	
 	HeroState getState() {
 		return state;
+	}
+	
+	Vec2 getSize() {
+		return size;
 	}
 }

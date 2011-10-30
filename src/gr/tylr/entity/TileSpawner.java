@@ -24,11 +24,13 @@ public class TileSpawner extends AbstractEntity {
     private ImageEntity selectedTile;
     private Vec2 center;
     private Hero hero;
+	Image laser;
     
     public TileSpawner (Hero hero) {
         super("TILE_SPAWNER");               
         this.hero = hero;
         spawnedTiles = new LinkedList<Entity>();
+		laser = Sprite.LASER;
     }
     
     public void spawnCircle() {
@@ -141,6 +143,7 @@ public class TileSpawner extends AbstractEntity {
 			
 			Vec2 mapPostion = selectedTile.getMapPosition();
 			
+			// Unspawn
 			if (hero.getState() == HeroState.UNSPAWN) {				
 				if (LevelManager.isOccupied(mapPostion)) {
 					Entity occupiedEntity = 
@@ -149,6 +152,7 @@ public class TileSpawner extends AbstractEntity {
 					
 					EntityManager.remove(occupiedEntity);
 				}
+				// Spawn
 			} else {
 				Entity spawnedTile = new StaticEntity(
 											selectedTile.getWorldPosition(),
@@ -171,7 +175,26 @@ public class TileSpawner extends AbstractEntity {
 
 	@Override
 	public void render(final Graphics graphics) {
-		graphics.drawLine(hero.getPolygonPosition().x, hero.getPolygonPosition().y, 
-						  selectedTile.getPolygonPosition().x, selectedTile.getPolygonPosition().y);
+		
+		Vec2 heroPolygonPosition = hero.getPolygonPosition();
+		heroPolygonPosition.x += hero.getSize().x/2;
+		heroPolygonPosition.y += hero.getSize().y/2;
+		Vec2 tilePolygonPosition = selectedTile.getPolygonPosition();
+		tilePolygonPosition.x += LevelManager.getTileHeight()/2;
+		tilePolygonPosition.y += LevelManager.getTileHeight()/2;
+		float deltaX = tilePolygonPosition.x - heroPolygonPosition.x;
+		float deltaY = tilePolygonPosition.y - heroPolygonPosition.y;
+		float angle = (float)(Math.atan2((double)deltaY,
+				                         (double)deltaX)*180.0f/Math.PI);
+		
+		float distance = (float)Math.sqrt(deltaX*deltaX + deltaY*deltaY);
+		graphics.pushTransform();
+		graphics.rotate(heroPolygonPosition.x,
+				        heroPolygonPosition.y,
+						angle);
+		laser.draw(heroPolygonPosition.x, heroPolygonPosition.y, distance, 30);
+
+		graphics.popTransform();
+		
 	}
 }

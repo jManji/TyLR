@@ -1,16 +1,14 @@
 package gr.tylr.entity;
 
-import org.newdawn.slick.Graphics;
-import org.newdawn.slick.Image;
+import gr.tylr.state.GameplayState;
+import static gr.tylr.util.Consts.PTM_SCALE;
 import org.jbox2d.collision.shapes.PolygonShape;
 import org.jbox2d.common.Vec2;
 import org.jbox2d.dynamics.Body;
 import org.jbox2d.dynamics.BodyDef;
 import org.jbox2d.dynamics.BodyType;
 import org.jbox2d.dynamics.FixtureDef;
-import org.newdawn.slick.geom.Polygon;
-import gr.tylr.state.GameplayState;
-import static gr.tylr.util.Consts.PTM_SCALE;
+import org.newdawn.slick.Image;
 
 /**
  *
@@ -52,9 +50,9 @@ public abstract class AbstractPhysicsEntity extends AbstractEntity {
     // TODO this will not be needed in the end, polygon is rendered
     // for debugging. Graphics parameter migh be redundant.
 //    @Override
-    public void render(Graphics graphics) {
-        graphics.draw(polygon);
-    }
+//    public void render(Graphics graphics) {
+//        graphics.draw(polygon);
+//    }
 
     private void init(Vec2 position, boolean isDynamic) {
         
@@ -67,7 +65,7 @@ public abstract class AbstractPhysicsEntity extends AbstractEntity {
         bodyDef.type = isDynamic == true? BodyType.DYNAMIC : BodyType.STATIC;
 		
 		if (name.equals("HERO")) {
-			System.out.println("init: " + (position.y + size.y/2));
+			System.out.println("init phys: " + (position.y + size.y/2));
 		}
 		
         bodyDef.position.set((position.x + size.x/2)/PTM_SCALE, 
@@ -98,10 +96,11 @@ public abstract class AbstractPhysicsEntity extends AbstractEntity {
         polygon.setX((body.getPosition().x*PTM_SCALE - size.x/2));
         polygon.setY(GameplayState.getContainer().getHeight() -
                             (body.getPosition().y*PTM_SCALE + size.y/2));
-//		if (this.getName().equals("HERO")) {
+		if (this.getName().equals("HERO")) {
 //			System.out.println("y:" + (
-//                            (body.getPosition().y*PTM_SCALE + size.y/2)));
-//		}
+//                            (body.getPosition().y*PTM_SCALE -  size.y/2)));
+			System.out.println("init pol: " + polygon.getY());
+		}
     }
 	
 	public Body getBody() {

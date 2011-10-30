@@ -21,8 +21,11 @@ public class DynamicEntity extends AbstractPhysicsEntity {
     
     @Override
     public void update(int delta) {
+
         polygon.setX(body.getPosition().x*PTM_SCALE - size.x/2);
         polygon.setY(GameplayState.getContainer().getHeight() -
                      (body.getPosition().y*PTM_SCALE + size.y/2));
+       
     }
+
 }

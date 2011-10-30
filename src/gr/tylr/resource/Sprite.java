@@ -14,6 +14,7 @@ public class Sprite {
     public static Image VALID_SELECTED_TILE;
     public static Image PLAIN_TILE;
     public static Image MEGAMAN;
+	public static Image LASER;
     
     public static void load() throws SlickException{
         VALID_CANDIDATE_TILE = new Image("/data/candidate_block.png"); 
@@ -21,5 +22,6 @@ public class Sprite {
         VALID_SELECTED_TILE = new Image("/data/valid_selected_tile.png");
         PLAIN_TILE = new Image("/data/plain_tile.png");
         MEGAMAN = new Image("/data/megaman.png");
+		LASER = new Image("/data/laser.png");
     }
 }
