@@ -20,6 +20,6 @@ public class Sprite {
         INVALID_CANDIDATE_TILE = new Image("/data/invalid_block.png");
         VALID_SELECTED_TILE = new Image("/data/valid_selected_tile.png");
         PLAIN_TILE = new Image("/data/plain_tile.png");
-        MEGAMAN = new Image("/data/megaman_small.png");
+        MEGAMAN = new Image("/data/megaman.png");
     }
 }

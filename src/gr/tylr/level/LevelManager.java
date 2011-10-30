@@ -1,5 +1,6 @@
 package gr.tylr.level;
 
+import gr.tylr.entity.Entity;
 import gr.tylr.entity.EntityManager;
 import gr.tylr.entity.StaticEntity;
 import java.util.ArrayList;
@@ -44,16 +45,16 @@ public class LevelManager {
         TiledMap tiledMap = currentLevel.getTileMap();
         float size = tiledMap.getTileHeight();
         for (int x = 0; x < tiledMap.getWidth(); x++) {
-            for (int y = 0; y < tiledMap.getHeight(); y++) {                
-                if (tiledMap.getTileId(x, y, 0) == 1) {               
-                    EntityManager.add(new 
-                            StaticEntity(new Vec2(x*size,
+            for (int y = 0; y < tiledMap.getHeight(); y++) {  
+                if (tiledMap.getTileId(x, y, 0) == 1) {
+					Entity mapTileEntity = new StaticEntity(new Vec2(x*size,
                                              (tiledMap.getHeight()-y-1)*size),
                                          new Vec2(size, size),
-                                         ("MAP_TILE_" + x + "_" + y)),
-                                         false,
-                                         false);                    
-                    currentLevel.setMapOccupation(x, tiledMap.getHeight()-y-1);
+                                         ("MAP_TILE_" + x + "_" + y));                                         
+                    EntityManager.add(mapTileEntity, false, false);
+                    currentLevel.setMapOccupation(x,
+							                      tiledMap.getHeight()-y-1,
+												  mapTileEntity);
                 }
             }
         }
@@ -67,6 +68,14 @@ public class LevelManager {
         return currentLevel.isOccupied(x, y);
     }
     
+	public static boolean isOccupied(Vec2 position) {
+        return currentLevel.isOccupied(position);
+    }
+	
+	public static Entity getOccupiedEntity(Vec2 position) {
+        return currentLevel.getOccupiedEntity(position);
+    }
+	
     public static int getLevelHeight() {
         return currentLevel.getTileMap().getHeight();
     }

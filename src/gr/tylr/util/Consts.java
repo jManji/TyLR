@@ -12,7 +12,8 @@ public class Consts {
     
     public enum HeroState {
         NORMAL, 
-        SPAWN;
+        SPAWN,
+		UNSPAWN;
     }
     
     public enum Direction {
@@ -30,7 +31,8 @@ public class Consts {
         RIGHT(Input.KEY_D),
         JUMP(Input.KEY_SPACE),
         SPAWN(Input.KEY_SPACE),
-        SPAWN_CIRCLE(Input.KEY_Z);        
+        SPAWN_CIRCLE(Input.KEY_Z),
+		UNSPAWN_CIRCLE(Input.KEY_X);
 
         private int button;
 

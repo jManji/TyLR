@@ -50,27 +50,18 @@ public class GameplayState extends BasicGameState {
 
     public void init(GameContainer container, StateBasedGame game) throws SlickException {
 
-        this.container = container;
+        GameplayState.container = container;
         cameraPosition =  new Vec2(0.0f, 0.0f);
         
         resourceManager = new ResourceManager();
         entityManager = new EntityManager();
         levelManager = new LevelManager();
-        
-               
-//        map = new TiledMap("/data/levels/map04_48.tmx");
+
         Vec2 gravity = new Vec2(0.0f, -20.0f);
         boolean doSleep = true;
         world = new World(gravity, doSleep);
-//        hero = new Hero(new Vec2(2.1f*PTM_SCALE, 4.1f*PTM_SCALE),
-        
-        hero = new Hero(new Vec2(50,53),
-                        new Vec2(30, 60), "HERO");
-        
-        
-//        System.out.println(hero.getPolygonPosition());
-//        System.out.println(hero.getWorldPosition());
-//        System.out.println("---");
+		
+        hero = new Hero(new Vec2(48, 48), new Vec2(46, 46), "HERO");
         
         EntityManager.add(hero, true, true);
 

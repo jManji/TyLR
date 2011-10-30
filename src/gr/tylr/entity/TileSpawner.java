@@ -6,10 +6,12 @@ import gr.tylr.state.GameplayState;
 import gr.tylr.util.Consts.Button;
 import gr.tylr.util.Consts.Direction;
 import static gr.tylr.util.Consts.Direction.*;
+import gr.tylr.util.Consts.HeroState;
 import gr.tylr.util.Util;
 import java.util.LinkedList;
 import java.util.List;
 import org.jbox2d.common.Vec2;
+import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Image;
 
 /**
@@ -18,7 +20,7 @@ import org.newdawn.slick.Image;
  */
 public class TileSpawner extends AbstractEntity {
     
-    private List<String> spawnedTiles;
+    private List<Entity> spawnedTiles;
     private ImageEntity selectedTile;
     private Vec2 center;
     private Hero hero;
@@ -26,7 +28,7 @@ public class TileSpawner extends AbstractEntity {
     public TileSpawner (Hero hero) {
         super("TILE_SPAWNER");               
         this.hero = hero;
-        spawnedTiles = new LinkedList<String>();
+        spawnedTiles = new LinkedList<Entity>();
     }
     
     public void spawnCircle() {
@@ -38,7 +40,9 @@ public class TileSpawner extends AbstractEntity {
                 if(x*x + y*y <= range*range + 1 &&
                    !(x ==0 && y==0)) {
                     if (LevelManager.isOccupied(center.x + x,
-                                                center.y + y)) {
+                                                center.y + y) &&
+						LevelManager.isOccupied(new Vec2(center.x + x, center.y + y)) &&
+						!LevelManager.getOccupiedEntity(new Vec2(center.x + x, center.y + y)).getName().contains("SPAWNED")) {
                         addToEntityManager(center, x, y, false);
                     } else {
                         addToEntityManager(center, x, y, true);
@@ -47,7 +51,7 @@ public class TileSpawner extends AbstractEntity {
             }
         }
         
-        selectedTile = new ImageEntity(new Vec2(Util.mapToWorld(center.x + 1),                                       
+        selectedTile = new ImageEntity(new Vec2(Util.mapToWorld(center.x + 1),
                                                 Util.mapToWorld(center.y +1)),
                                        "SELECTED_TILE",
                                        Sprite.VALID_SELECTED_TILE);
@@ -68,12 +72,15 @@ public class TileSpawner extends AbstractEntity {
                                                  (int)(center.x + x) + "_" +
                                                  (int)(center.y + y);                                
 
-        EntityManager.addPost(new ImageEntity(new Vec2(
+		Entity candidateTile = new ImageEntity(new Vec2(
                                     Util.mapToWorld(center.x + x),
                                     Util.mapToWorld(center.y + y)),
-                                    candidateName, candidateSprite), false, true);
+                                    candidateName, candidateSprite);
+		
+        EntityManager.addPost(candidateTile, false, true);
 
-        spawnedTiles.add(candidateName);
+		// TODO this should be an array, for efficiency
+        spawnedTiles.add(candidateTile);
     }
 
     public void clear() {
@@ -99,12 +106,6 @@ public class TileSpawner extends AbstractEntity {
 
             Vec2 newPosition = selectedTile.getMapPosition();
 
-//            System.out.println("------------");
-//            System.out.println(selectedTile.getWorldPosition());
-//            System.out.println(newPosition);
-//            System.out.println(Util.mapToWorld(newPosition.y));            
-//            System.out.println("==");
-            
             if (direction == LEFT) {
                 newPosition.x -= 1;
             } else if (direction == RIGHT) {
@@ -114,26 +115,17 @@ public class TileSpawner extends AbstractEntity {
             } else if (direction == DOWN) {
                 newPosition.y -= 1;
             }
-            
-            
-//            for(int y=0; y<=10; y++) {
-//                for(int x=0; x<=14; x++) {
-//                    System.out.print(x + "," + y + ":" + LevelManager.getCurrentLevel().getMapOccupation()[x][y] + "  ");
-//                }
-//                System.out.println();
-//            }
-            
-//            System.out.println(newPosition);
-//            System.out.println(Util.mapToWorld(newPosition.y));
-//            System.out.println(LevelManager.isOccupied((int)newPosition.x,
-//                                                       (int)newPosition.y));
+			
             // TODO could be done better here
             if (!newPosition.equals(center) &&
                 EntityManager.getRendableEntities().
                               containsKey("CANDIDATE_TILE_" +
                               (int)newPosition.x + "_" + (int)newPosition.y) &&
                 !LevelManager.isOccupied((int)newPosition.x,
-                                         (int)newPosition.y)) {
+                                         (int)newPosition.y) || 
+				(LevelManager.isOccupied((int)newPosition.x,
+                                        (int)newPosition.y)	&& 
+				LevelManager.getOccupiedEntity(new Vec2(newPosition.x, newPosition.y)).getName().contains("SPAWNED"))) {
 
                 selectedTile.setPosition(new Vec2(
                                                Util.mapToWorld(newPosition.x), 
@@ -145,17 +137,41 @@ public class TileSpawner extends AbstractEntity {
 	private void spawn() {
 		
         if (GameplayState.getContainer().getInput().
-                                        isKeyPressed(Button.SPAWN.getButton())) {
+                                       isKeyPressed(Button.SPAWN.getButton())) {
 			
-            EntityManager.addPost(new StaticEntity(
-                                            selectedTile.getWorldPosition(),
-                                            "SPAWNED_TILE" + Util.generateID(),
-                                            Sprite.PLAIN_TILE),
-                                            false, true);
-            clear();
-            
-            hero.unSpawn();
+			Vec2 mapPostion = selectedTile.getMapPosition();
+			
+			if (hero.getState() == HeroState.UNSPAWN) {				
+				if (LevelManager.isOccupied(mapPostion)) {
+					Entity occupiedEntity = 
+					LevelManager.getOccupiedEntity(new Vec2((int)mapPostion.x, 
+											                (int)mapPostion.y));
+					
+					EntityManager.remove(occupiedEntity);
+				}
+			} else {
+				Entity spawnedTile = new StaticEntity(
+											selectedTile.getWorldPosition(),
+											"SPAWNED_TILE_" + (int)mapPostion.x
+														    + "_" +
+															+ (int)mapPostion.y,
+											Sprite.PLAIN_TILE);
+				
+				EntityManager.addPost(spawnedTile, false, true);
+				
+				LevelManager.getCurrentLevel().setMapOccupation(
+															(int)mapPostion.x, 
+															(int)mapPostion.y,
+															spawnedTile);
+				clear();
+				hero.unequipTileSpawner();
+			}
         }
     }
 
+	@Override
+	public void render(final Graphics graphics) {
+		graphics.drawLine(hero.getPolygonPosition().x, hero.getPolygonPosition().y, 
+						  selectedTile.getPolygonPosition().x, selectedTile.getPolygonPosition().y);
+	}
 }

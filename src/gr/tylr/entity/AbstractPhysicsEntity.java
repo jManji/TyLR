@@ -52,9 +52,9 @@ public abstract class AbstractPhysicsEntity extends AbstractEntity {
     // TODO this will not be needed in the end, polygon is rendered
     // for debugging. Graphics parameter migh be redundant.
 //    @Override
-//    public void render(Graphics graphics) {
-//        graphics.draw(polygon);
-//    }    
+    public void render(Graphics graphics) {
+        graphics.draw(polygon);
+    }
 
     private void init(Vec2 position, boolean isDynamic) {
         
@@ -65,6 +65,11 @@ public abstract class AbstractPhysicsEntity extends AbstractEntity {
         // Body definition
         bodyDef = new BodyDef();        
         bodyDef.type = isDynamic == true? BodyType.DYNAMIC : BodyType.STATIC;
+		
+		if (name.equals("HERO")) {
+			System.out.println("init: " + (position.y + size.y/2));
+		}
+		
         bodyDef.position.set((position.x + size.x/2)/PTM_SCALE, 
                              (position.y + size.y/2)/PTM_SCALE);
         body = GameplayState.getWorld().createBody(bodyDef);
@@ -78,9 +83,9 @@ public abstract class AbstractPhysicsEntity extends AbstractEntity {
         // Fixture
         fixtureDef = new FixtureDef();
         fixtureDef.shape = box;
-        fixtureDef.density = 0.0f;
-        fixtureDef.friction = 0.5f;
-        fixtureDef.restitution = 0.0f;
+//        fixtureDef.density = 0.0f;
+//        fixtureDef.friction = 0.5f;
+//        fixtureDef.restitution = 0.0f;
         
         body.createFixture(fixtureDef);
 
@@ -92,6 +97,14 @@ public abstract class AbstractPhysicsEntity extends AbstractEntity {
         // Initialise position
         polygon.setX((body.getPosition().x*PTM_SCALE - size.x/2));
         polygon.setY(GameplayState.getContainer().getHeight() -
-                            (body.getPosition().y*PTM_SCALE + size.y/2));                        
+                            (body.getPosition().y*PTM_SCALE + size.y/2));
+//		if (this.getName().equals("HERO")) {
+//			System.out.println("y:" + (
+//                            (body.getPosition().y*PTM_SCALE + size.y/2)));
+//		}
     }
+	
+	public Body getBody() {
+		return body;
+	}
 }
